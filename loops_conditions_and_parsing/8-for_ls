@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+# This script lists files in the current directory
+# Displays only the part after the first dash
+# Does not display hidden files
+
+for file in *; do
+    # Check if it is a regular file/directory (optional)
+    if [[ -e $file ]]; then
+        # Remove everything up to and including the first dash
+        echo "${file#*-}"
+    fi
+done
+
