@@ -1,15 +1,18 @@
 #!/usr/bin/env bash
-# Creates a PID file and handles signals for custom messages and cleanup
 
 PID_FILE="/var/run/myscript.pid"
 
-# Write own PID to file
+# Write PID to file
 echo $$ > "$PID_FILE"
 
-# Trap signals
-trap 'echo "I hate the kill command"' SIGTERM
-trap 'echo "Y U no love me?!"' SIGINT
-trap 'rm -f "$PID_FILE"; exit' SIGQUIT SIGTERM
+# Handler for SIGINT
+trap 'echo "Y U no love me?!";' SIGINT
+
+# Handler for SIGTERM
+trap 'echo "I hate the kill command"; rm -f "$PID_FILE"; exit 0' SIGTERM
+
+# Handler for SIGQUIT
+trap 'rm -f "$PID_FILE"; exit 0' SIGQUIT
 
 # Infinite loop
 while true; do
