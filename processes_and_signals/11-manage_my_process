@@ -1,27 +1,29 @@
 #!/usr/bin/env bash
-# This script manages the manage_my_process program
-# Usage: ./11-manage_my_process {start|stop|restart}
+# Init script to manage the manage_my_process daemon
 
-PID_FILE="/var/run/my_process.pid"
-SCRIPT_PATH="/path/to/manage_my_process"  # replace with actual path if needed
+PIDFILE="/var/run/my_process.pid"
 
 start() {
-    "$SCRIPT_PATH" &
-    echo $! > "$PID_FILE"
+    ./manage_my_process &
+    echo $! > "$PIDFILE"
     echo "manage_my_process started"
 }
 
 stop() {
-    if [ -f "$PID_FILE" ]; then
-        kill "$(cat "$PID_FILE")"
-        rm -f "$PID_FILE"
+    if [ -f "$PIDFILE" ]; then
+        kill "$(cat "$PIDFILE")"
+        rm -f "$PIDFILE"
+        echo "manage_my_process stopped"
     fi
-    echo "manage_my_process stopped"
 }
 
 restart() {
-    stop
-    start
+    if [ -f "$PIDFILE" ]; then
+        kill "$(cat "$PIDFILE")"
+        rm -f "$PIDFILE"
+    fi
+    ./manage_my_process &
+    echo $! > "$PIDFILE"
     echo "manage_my_process restarted"
 }
 
@@ -39,4 +41,3 @@ case "$1" in
         echo "Usage: manage_my_process {start|stop|restart}"
         ;;
 esac
-
